@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Transformar imagen a texto</title>
+</head>
+<body>
+    <div class="container">
+        <h1>👋 Convierte tu imagen a texto</h1>
+        <div class="conversor">
+            <div class="inputs">
+                <input class="" type="file" id="inputImage" accept="image/*">
+                <button class="boton-conversor" type="button" onclick="convertImage()">Convertir</button>
+                <br/>
+                <img id="imagePreview" class="preview">
+            </div>
+            <div class="outputs">
+                <pre id="outputText" class="output" disabled></pre>
+            </div>
+        </div>
+    </div>
+    <footer>
+        dev with 💘 by nsnt
+    </footer>
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    <script>
+        // Función para convertir la imagen a texto
+        function convertImage() {
+          const inputImage = document.getElementById('inputImage');
+          const outputText = document.getElementById('outputText');
+          const imagePreview = document.getElementById('imagePreview');    
+        
+          const file = inputImage.files[0];
+    
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const image = new Image();
+              image.src = e.target.result;
+              imagePreview.src = e.target.result;
+              image.onload = function () {
+                Tesseract.recognize(
+                  image,
+                  'eng',
+                ).then(({ data: { text } }) => {
+                  outputText.textContent = text;
+                }).catch((error) => {
+                  console.error('Error al convertir la imagen a texto:', error);
+                });
+              };
+            };
+    
+            reader.readAsDataURL(file);
+          }
+        }
+      </script>
+</body>
+</html>
